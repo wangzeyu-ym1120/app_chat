@@ -3,6 +3,7 @@
     <div class="logo">
       <Logo />
     </div>
+
     <div class="input-container">
       <div class="input-item">
         <NInput placeholder="Plase Input Username" size="large" maxlength="20" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.userName" @input="handlerInput($event, 'userName')">
@@ -32,13 +33,15 @@
 </template>
 
 <script setup>
-import { reactive, ref } from '@vue/reactivity'
+import customer from '../api/customer'
+import { reactive, toRefs } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { NInput, NButton, NIcon } from 'naive-ui'
+import { NInput, NButton, NIcon, useMessage, } from 'naive-ui'
 import { PersonOutline as Person, KeyOutline as Key, LogoGithub as Logo } from '@vicons/ionicons5'
 
-const router = useRouter()
-
+const Router = useRouter()
+const Store = useStore()
 const loginInfos = reactive({
   userName: '',
   password: ''
@@ -47,20 +50,27 @@ const errorToast = {
   userName: '请输入用户名',
   password: '请输入密码'
 }
+const Toast = useMessage()
 
 const handlerInput = (val, type) => {
   const temVal = val.replace(/[\s\n\r\t]/g, '')
   loginInfos[type] = temVal
 }
 
+const useToastError = type => {
+  Toast.error(errorToast[type], { duration: 1300})
+}
+
 const checkUserName = userName => {
   if (!userName) {
+    useToastError('userName')
     return false
   }
   return true
 }
 const checkPassword = password => {
   if (!password) {
+    useToastError('password')
     return false
   }
   return true
@@ -68,12 +78,21 @@ const checkPassword = password => {
 const checkInfos = infos => {
   if (!checkUserName(infos.userName)) return false
   if (!checkPassword(infos.password)) return false
+  return true
 }
+
 const login = () => {
   if (!checkInfos(loginInfos)) {
     return
   }
-  router.replace('/')
+  customer.login(toRefs(loginInfos)).then(res => {
+    console.log('res', res)
+    if (res.result !== 0) {
+      return
+    }
+    Store.dispatch('setToken', res.token)
+    Router.replace('/')
+  })
 }
 </script>
 
