@@ -1,5 +1,6 @@
 import http from "../utils/http"
 
 export default {
-  login: params => http.post('/login', params)
+  login: params => http.post('/login', params),
+  register: params => http.post('/register', params)
 }

@@ -9,23 +9,23 @@ axiosInstance.defaults.headers.post['Content-Type'] = 'application/json charset=
 
 axiosInstance.interceptors.request.use(
   conifg => {
-    console.log('interceptors-request-conifg', conifg)
+    console.log('http-request-conifg', conifg)
     return conifg
   },
   error => {
-    console.log('interceptors-request-error', error)
+    console.log('http-request-error', error)
   }
 )
 
 axiosInstance.interceptors.response.use(
   response => {
-    console.log('interceptors-response', response)
+    console.log('http-response', response)
     if (response.data.code === 0) {
       return response.data.content
     }
   },
   error => {
-    console.log('interceptors-error', error)
+    console.log('http-error', error)
   }
 )
 

@@ -1,12 +1,12 @@
 <template>
-  <div class="login-container">
+  <div class="register-container">
     <div class="logo">
       <Logo />
     </div>
 
     <div class="input-container">
       <div class="input-item">
-        <NInput placeholder="Plase Input Username" size="large" maxlength="20" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.username" @input="handlerInput($event, 'username')">
+        <NInput placeholder="Plase Input Username" size="large" maxlength="20" style="--text-color:#fff;--caret-color:#fff;" v-model:value="registerInfos.username" @input="handlerInput($event, 'username')">
           <template #prefix>
             <n-icon class="icon-container" size="20">
               <Person class="icon" />
@@ -16,7 +16,7 @@
       </div>
       
       <div class="input-item">
-        <NInput placeholder="Plase Input Password" size="large" type="password" show-password-on="click" maxlength="18" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.password">
+        <NInput placeholder="Plase Input Password" size="large" type="password" show-password-on="click" maxlength="18" style="--text-color:#fff;--caret-color:#fff;" v-model:value="registerInfos.password">
           <template #prefix>
             <n-icon class="icon-container" size="20">
               <Key class="icon" />
@@ -26,12 +26,11 @@
       </div>
 
       <div class="btn-container">
-        <n-button strong type="info" :block="true" @click="login">Login</n-button>
+        <n-button strong type="info" :block="true" @click="register">Register</n-button>
       </div>
 
       <div class="other-info-container">
-        <div class="forget-btn" @click="goPage('forget')">忘记密码</div>
-        <div class="reg-btn" @click="goPage('reg')">去注册</div>
+        <div class="reg-btn" @click="goPage('login')">去登录</div>
       </div>
     </div>
   </div>
@@ -48,7 +47,7 @@ import md5 from 'js-md5'
 
 const Router = useRouter()
 const Store = useStore()
-const loginInfos = reactive({
+const registerInfos = reactive({
   username: '',
   password: ''
 })
@@ -60,7 +59,7 @@ const Toast = useMessage()
 
 const handlerInput = (val, type) => {
   const temVal = val.replace(/[\s\n\r\t]/g, '')
-  loginInfos[type] = temVal
+  registerInfos[type] = temVal
 }
 
 const useToastError = type => {
@@ -89,18 +88,17 @@ const checkInfos = infos => {
 
 const goPage = type => {
   const types = {
-    reg: '/reg',
-    forget: '/forget'
+    login: '/login',
   }
   if (!type || !types[type]) return
   Router.replace(types[type])
 }
 
-const login = () => {
-  if (!checkInfos(loginInfos)) {
+const register = () => {
+  if (!checkInfos(registerInfos)) {
     return
   }
-  customer.login({ username: loginInfos.username, password: md5(loginInfos.password) }).then(res => {
+  customer.register({ username: registerInfos.username, password: md5(registerInfos.password) }).then(res => {
     console.log('res', res)
     if (res.result !== 0) {
       Toast.info(res.resultMessage)
@@ -113,10 +111,10 @@ const login = () => {
 </script>
 
 <style lang="less" scoped>
-.login-container {
+.register-container {
   position: relative;
   height: 100vh;
-  background: url('../assets/img/login_bg.jpg') no-repeat center center;
+  background: url('../assets/img/register_bg.jpg') no-repeat center center;
   background-size: cover;
 
   .logo {
@@ -156,11 +154,11 @@ const login = () => {
 
     .other-info-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       margin-top: 30px;
-      padding: 0 10px;
       text-align: right;
       color: #fff;
+      padding: 0 10px;
       font-size: 24px;
       line-height: 24px;
     }
