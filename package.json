@@ -7,12 +7,13 @@
     "sit": "vue-cli-service serve --mode sit",
     "prd": "vue-cli-service serve --mode prd",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode prd",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "babel-plugin-import": "^1.13.3",
     "core-js": "^3.6.5",
+    "filemanager-webpack-plugin": "^6.1.7",
     "less-loader": "^6.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12",

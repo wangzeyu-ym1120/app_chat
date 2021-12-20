@@ -23,7 +23,6 @@ const props = defineProps({
   option: Object
 })
 const selectItem = () => {
-  console.log('props.option', props.option)
   router.push('/chat')
 }
 </script>
