@@ -3,15 +3,15 @@
     <router-view></router-view>
   </AppProvider>
 
-  <Nav class="footer" v-if="isMainPath" :navList="mainNavList" ></Nav>
+  <Nav class="footer" v-if="isMainPath" :navList="mainNavList" :path="navPath" />
 </template>
 
 <script setup>
 import Nav from './components/layout/Nav.vue'
 import AppProvider from './components/layout/AppProvider.vue'
-import { useCheckPathIsMain } from './hooks/routerPath'
+import { useCheckPathIsMain, mainNavList } from './hooks/routerPath'
 
-const { isMainPath, mainNavList } = useCheckPathIsMain()
+const { navPath, isMainPath } = useCheckPathIsMain()
 
 </script>
 

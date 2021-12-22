@@ -1,9 +1,11 @@
 <template>
-  <n-message-provider>
-    <slot />
-  </n-message-provider>
+  <n-dialog-provider>
+    <n-message-provider>
+      <slot />
+    </n-message-provider>
+  </n-dialog-provider>
 </template>
 
 <script setup>
-import { NMessageProvider } from 'naive-ui'
+import { NMessageProvider, NDialogProvider } from 'naive-ui'
 </script>

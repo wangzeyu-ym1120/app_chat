@@ -12,6 +12,9 @@ const actions = {
   setToken ({ commit }, token) {
     Cookies.set('token', token)
     commit('SET_TOKEN', token)
+  },
+  removeToken() {
+    Cookies.remove('token')
   }
 }
 

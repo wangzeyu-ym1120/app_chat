@@ -1,33 +1,42 @@
 <template>
   <div class="nav-container">
-    <div class="nav-item" v-for="(nav, index) in navList" :key="'nav' + index" @click="changeNav(index)">
-      <span :class="{'active': index === currentIndex}">{{nav.text}}</span>
+    <div class="nav-item" v-for="(nav, index) in navList" :key="'nav' + index" @click="changeNav(nav.path)">
+      <span :class="{'active': nav.path === currentPath}">{{nav.text}}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue"
+import { ref, watch } from "vue"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
 
 const props = defineProps({
-  navList: Array
+  navList: Array,
+  path: String
 })
 
-let currentIndex = ref(0)
-const changeNav = index => {
-  currentIndex.value = index
+let currentPath = ref('/')
+const changeNav = path => {
+  currentPath.value = path
   goPage()
 }
-  
-watchEffect(() => {
-  window.document.title = props.navList[currentIndex.value].title
-})
+
+watch(() => props.path, () => {
+  currentPath.value = props.path
+}, { immediate: true })
+
+watch(currentPath, () => {
+  const findResult = props.navList.find(item => item.path === currentPath.value)
+  console.log('findResult', findResult)
+  if (findResult) {
+    window.document.title = findResult.title
+  }
+}, { immediate: true })
 
 const goPage = () => {
-  router.push(props.navList[currentIndex.value].path)
+  router.push(currentPath.value)
 }
 </script>
 
