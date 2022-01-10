@@ -1,32 +1,29 @@
 import Cookies from 'js-cookie'
+import { defineStore } from 'pinia'
 
-const state = {
-  token: Cookies.get('token')
-}
-
-const getters = {
-  getToken: state => state.token
-}
-
-const actions = {
-  setToken ({ commit }, token) {
-    Cookies.set('token', token)
-    commit('SET_TOKEN', token)
+export const useUserStore = defineStore('user', {
+  state: () => {
+    return {
+      token: '',
+      userInfo: {}
+    }
   },
-  removeToken() {
-    Cookies.remove('token')
+  getters: {
+    getToken: state => state.token ? state.token : Cookies.get('token'),
+    getUserInfo: state => state.userInfo
+  },
+  actions: {
+    setToken (token) {
+      Cookies.set('token', token)
+      this.token = token
+    },
+    removeToken() {
+      Cookies.remove('token')
+      this.token = ''
+      this.userInfo = {}
+    },
+    setUserInfo(userinfo) {
+      this.userInfo = userinfo || {}
+    }
   }
-}
-
-const mutations = {
-  SET_TOKEN (state, token) {
-    state.token = token
-  }
-}
-
-export default {
-  state,
-  getters,
-  actions,
-  mutations
-}
+})

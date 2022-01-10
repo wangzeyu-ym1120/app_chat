@@ -40,14 +40,14 @@
 <script setup>
 import customer from '../api/customer'
 import { reactive, toRefs } from 'vue'
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { NInput, NButton, NIcon, useMessage } from 'naive-ui'
 import { PersonOutline as Person, KeyOutline as Key, LogoGithub as Logo } from '@vicons/ionicons5'
 import md5 from 'js-md5'
+import { useUserStore } from '../store/modules/user'
 
 const Router = useRouter()
-const Store = useStore()
+const UserStore = useUserStore()
 const loginInfos = reactive({
   username: '',
   password: ''
@@ -106,7 +106,7 @@ const login = () => {
       Toast.info(res.resultMessage)
       return
     }
-    Store.dispatch('setToken', res.token)
+    UserStore.setToken(res.token)
     Router.replace('/')
   })
 }

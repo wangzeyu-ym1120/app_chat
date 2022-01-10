@@ -39,14 +39,14 @@
 <script setup>
 import customer from '../api/customer'
 import { reactive, toRefs } from 'vue'
-import { useStore } from 'vuex'
+import { useUserStore } from '../store/modules/user'
 import { useRouter } from 'vue-router'
 import { NInput, NButton, NIcon, useMessage, } from 'naive-ui'
 import { PersonOutline as Person, KeyOutline as Key, LogoGithub as Logo } from '@vicons/ionicons5'
 import md5 from 'js-md5'
 
 const Router = useRouter()
-const Store = useStore()
+const UserStore = useUserStore()
 const registerInfos = reactive({
   username: '',
   password: ''
@@ -99,12 +99,11 @@ const register = () => {
     return
   }
   customer.register({ username: registerInfos.username, password: md5(registerInfos.password) }).then(res => {
-    console.log('res', res)
     if (res.result !== 0) {
       Toast.info(res.resultMessage)
       return
     }
-    Store.dispatch('setToken', res.token)
+    UserStore.setToken(res.token)
     Router.replace('/')
   })
 }

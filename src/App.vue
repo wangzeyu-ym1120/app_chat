@@ -1,8 +1,10 @@
 <template>
-  <AppProvider>
-    <router-view></router-view>
-  </AppProvider>
-
+  <div :class="{'isMain': isMainPath}">
+    <AppProvider>
+      <router-view></router-view>
+    </AppProvider>
+  </div>
+  
   <Nav class="footer" v-if="isMainPath" :navList="mainNavList" :path="navPath" />
 </template>
 
@@ -16,6 +18,10 @@ const { navPath, isMainPath } = useCheckPathIsMain()
 </script>
 
 <style>
+.isMain {
+  height: calc(100vh - 90px);
+  overflow: auto;
+}
 .footer {
   position: fixed;
   bottom: 0;

@@ -27,7 +27,7 @@ export default new createRouter({
     {
       path: '/message',
       name: 'message',
-      component: () => import( /** */ '../views/messageList.vue'),
+      component: () => import( /** */ '../views/message.vue'),
       meta: {
         loginAuth: true
       }

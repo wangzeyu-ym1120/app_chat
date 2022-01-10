@@ -29,7 +29,6 @@ watch(() => props.path, () => {
 
 watch(currentPath, () => {
   const findResult = props.navList.find(item => item.path === currentPath.value)
-  console.log('findResult', findResult)
   if (findResult) {
     window.document.title = findResult.title
   }

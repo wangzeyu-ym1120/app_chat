@@ -1,7 +1,7 @@
 import axios from 'axios'
 import datahelper from './datahelper'
 import qs from 'qs'
-import store from '../store'
+import { useUserStore } from '../store/modules/user'
 import router from '../router'
 
 const axiosInstance = axios.create()
@@ -11,7 +11,8 @@ axiosInstance.defaults.headers.post['Content-Type'] = 'application/json charset=
 
 axiosInstance.interceptors.request.use(
   conifg => {
-    if (store.getters.getToken) conifg.headers.token = store.getters.getToken
+    const UserStore = useUserStore()
+    if (UserStore.getToken) conifg.headers.token = UserStore.getToken
     console.log('http-request-conifg', conifg)
     return conifg
   },
@@ -24,7 +25,8 @@ axiosInstance.interceptors.response.use(
   response => {
     console.log('http-response', response)
     if (response.data.code === 4001) {
-      store.dispatch('removeToken')
+      const UserStore = useUserStore()
+      UserStore.removeToken()
       alert('无权限访问')
       router.push('/login')
       return {}

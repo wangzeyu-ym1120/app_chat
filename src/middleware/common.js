@@ -1,10 +1,12 @@
 import router from '@/router'
 import datahelper from '@/utils/datahelper'
-import store from '../store'
+import { useUserStore } from '../store/modules/user'
 
 function useRouteMiddleware() {
+  const UserStore = useUserStore()
+
   router.beforeEach((to, from, next) => {
-    if (datahelper.getValue(to, 'to.meta.loginAuth') && !store.getters.getToken) {
+    if (datahelper.getValue(to, 'to.meta.loginAuth') && !UserStore.getToken) {
       next({
         path: '/login',
         replace: true
@@ -13,6 +15,7 @@ function useRouteMiddleware() {
     }
     next()
   })
+  
   router.afterEach((to, from) => {
     if (datahelper.getValue(to, 'to.meta.title')) {
       window.document.title = to.meta.title
