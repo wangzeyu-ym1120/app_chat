@@ -1,4 +1,4 @@
-// import io from 'socket.io-client'
+import io from 'socket.io-client'
 import { useSocketStore } from '../store/modules/socket'
 import { useUserStore } from '../store/modules/user'
 import customer from '../api/customer'
@@ -22,11 +22,7 @@ export const initIO = () => {
   const userId = UserStore.getUserInfo.userId
 
   
-  io.socket = io('ws://10.56.39.57:4000/chat', {
-    query: {
-      room: 'chat'
-    }
-  })
+  io.socket = io(process.env.VUE_APP_SOCKET_PATH)
   io.socket.on('connect', () => {
     const id = io.socket.id
     console.log('#connect', id)

@@ -43,6 +43,11 @@ module.exports = {
         secure: true, //接受对方是https的接口
         changeOrigin: true, // 是否需要跨域
         pathRewrite: {'^/api' : ''}
+      },
+      '/socket.io':{ // 这个是你要替换的位置
+        target: process.env.VUE_APP_TARGET, //这个是被替换的目标地址
+        secure: true, //接受对方是https的接口
+        changeOrigin: true // 是否需要跨域
       }
     }
   }

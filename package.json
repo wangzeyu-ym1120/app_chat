@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --mode dev --port 3000",
-    "sit": "vue-cli-service serve --mode sit",
-    "prd": "vue-cli-service serve --mode prd",
+    "sit": "vue-cli-service serve --mode sit --port 3000",
+    "prd": "vue-cli-service serve --mode prd --port 3000",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode prd",
     "lint": "vue-cli-service lint"
@@ -16,7 +16,7 @@
     "filemanager-webpack-plugin": "^6.1.7",
     "less-loader": "^6.0.0",
     "pinia": "^2.0.0-rc.10",
-    "socket.io-client": "^4.4.0",
+    "socket.io-client": "^2.1.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"

@@ -10,7 +10,7 @@
           </div>
         </template>
 
-        <n-thing :title="item.from">
+        <n-thing :title="item.from+''">
           {{item.content}}
         </n-thing>
 
