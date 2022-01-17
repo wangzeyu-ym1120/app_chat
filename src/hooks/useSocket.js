@@ -27,11 +27,9 @@ export const initIO = () => {
     const id = io.socket.id
     console.log('#connect', id)
     getChatMsgList()
-    io.socket.on('receiveMsg', data => {
-      log('#receiveMsg,', data)
-      if (data.from === userId || data.to === userId) {
-        SocketStore.setReceiveMsg({ chatMsg: data, isToMe: data.to === userId })
-      }
+    io.socket.on(userId+'', data => {
+      log('#userId,', data)
+      SocketStore.setReceiveMsg({ chatMsg: data})
     })
   })
 }

@@ -5,17 +5,19 @@
         <template #prefix>
           <div class="head-img">
             <n-badge v-show="item.unReadCount !== 0" :value="item.unReadCount">
-              <n-avatar size="large">{{item.from}}</n-avatar>
+              <n-avatar size="large" :style="{ backgroundColor: Colors[index%ColorsLength], 'border-radius': '5px' }"></n-avatar>
             </n-badge>
           </div>
         </template>
 
         <n-thing :title="item.from+''">
-          {{item.content}}
+          <n-ellipsis style="max-width: 4.22rem;">
+            {{item.content}}
+          </n-ellipsis>
         </n-thing>
 
-        <template #suffix>
-          <div class=""></div>
+        <template #suffix >
+          <div class="time">{{formate(item.create_time)}}</div>
         </template>
       </n-list-item>
     </n-list>
@@ -23,64 +25,35 @@
 </template>
 
 <script setup>
-import List from '../components/message/List.vue'
-import customer from '../api/customer'
-import { initIO } from '../hooks/useSocket.js'
-import { onMounted, reactive, watch } from '@vue/runtime-core'
-import { NList, NListItem, NThing, NBadge, NAvatar } from 'naive-ui'
-import { useSocketStore } from '../store/modules/socket'
-import { useUserStore } from '../store/modules/user'
+import { reactive } from '@vue/runtime-core'
+import { NList, NListItem, NThing, NBadge, NAvatar, NEllipsis } from 'naive-ui'
 import { useRouter } from 'vue-router'
+import { Colors } from '../hooks/useColor'
+import { useWatchChatMsgList } from '../hooks/chatMsg'
 
+const ColorsLength = Colors.length
 const router = useRouter()
 const data = reactive({
   msgList: []
 })
-const UserStore = useUserStore()
-const userinfo = UserStore.getUserInfo
-const currentUserId = userinfo.userId
-const SocketStore = useSocketStore()
-watch(() => SocketStore.getChatMsgList, val => {
-  let list = val.filter(item => item.to === currentUserId)
-  const lastMsgObjs = {}
-  for(let item of list) {
-    const msg = { ...item }
-    msg.unReadCount = 0
-    if (!msg.is_read) {
-      msg.unReadCount = 1
-    }
-    const chatId = msg.chat_id
-    const lastMsg = lastMsgObjs[chatId]
-    if (!lastMsg) {
-      lastMsgObjs[chatId] = msg
-      continue
-    }
-    const unReadCount = lastMsg.unReadCount + msg.unReadCount
-    if (msg.create_time > lastMsg.create_time) {
-      lastMsgObjs[chatId] = msg
-    }
-    lastMsgObjs[chatId].unReadCount = unReadCount
-  }
-  const lastMsgs = Object.values(lastMsgObjs)
-  lastMsgs.sort(function (msg1, msg2) {
-    return msg2.create_time - msg1.create_time
-  })
-  data.msgList = lastMsgs
-},{ deep: true, immediate: true })
+
+const formate = nS =>{
+  return new Date(parseInt(nS)).toLocaleString().replace(/:\d{1,2}$/,' ');
+}
+
+useWatchChatMsgList(data, 'msgList')
 
 const selectItem = userinfo => {
   const { from } = userinfo
   router.push({
     path: '/chat',
-    query: {id: from}
+    query: { id: from }
   })
 }
 </script>
 
 <style lang="less" scoped>
 .message {
-  font-size: 30px;
-
   ul {
     margin: 0;
     padding: 0;
@@ -88,6 +61,10 @@ const selectItem = userinfo => {
 
   .head-img {
     margin-left: 20px;
+  }
+
+  /deep/.n-list-item__suffix {
+    margin-right: 20px;
   }
 }
 </style>

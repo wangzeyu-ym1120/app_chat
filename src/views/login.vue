@@ -6,7 +6,7 @@
 
     <div class="input-container">
       <div class="input-item">
-        <NInput placeholder="Plase Input Username" size="large" maxlength="20" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.username" @input="handlerInput($event, 'username')">
+        <NInput placeholder="Plase Input Username" size="large" maxlength="20" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.username" @input="handlerInput($event, 'username')" @keyup.enter="login" >
           <template #prefix>
             <n-icon class="icon-container" size="20">
               <Person class="icon" />
@@ -16,7 +16,7 @@
       </div>
       
       <div class="input-item">
-        <NInput placeholder="Plase Input Password" size="large" type="password" show-password-on="click" maxlength="18" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.password">
+        <NInput placeholder="Plase Input Password" size="large" type="password" show-password-on="click" maxlength="18" style="--text-color:#fff;--caret-color:#fff;" v-model:value="loginInfos.password" @keyup.enter="login" >
           <template #prefix>
             <n-icon class="icon-container" size="20">
               <Key class="icon" />

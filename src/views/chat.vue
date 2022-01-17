@@ -1,29 +1,37 @@
 <template>
-  <div class="chat-content-container">
+  <div class="navigation-bar-contianer">
+    <n-icon class="icon-back" size="25" @click="back">
+      <chevron-back />
+    </n-icon>
+    <div class="title">{{targetId}}</div>
+  </div>
+
+  <div class="chat-content-container" ref="chatBoxRef">
     <template v-for="(item, index) in chatData.msgList" :key="`msg${index}`">
-      <n-space :justify="item.from === currentUserId ? 'end' : 'start'" >{{item.content}}</n-space>
+      <n-space class="chat-content" :justify="item.from === currentUserId ? 'end' : 'start'" >{{item.content}}</n-space>
     </template>
   </div>
 
   <div class="chat-tool-container">
     <n-space class="input-container" justify="space-between">
-      <n-input type="text" v-model:value="content" />
-
+      <n-input type="text" v-model:value="content" @keyup.enter="submit" />
       <n-button type="success" @click="submit">发送</n-button>
     </n-space>
   </div>
 </template>
 
 <script setup>
-import { NSpace, NInput, NButton } from 'naive-ui'
+import { NSpace, NInput, NButton, NIcon } from 'naive-ui'
 import { sendMessage } from '../hooks/useSocket'
-import { reactive, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted, reactive, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../store/modules/user'
 import { useSocketStore } from '../store/modules/socket'
 import customer from '../api/customer'
+import { ChevronBack } from '@vicons/ionicons5'
 
 const content = ref('')
+const chatBoxRef = ref(null)
 const chatData = reactive({
   msgList: []
 })
@@ -42,25 +50,69 @@ watch(() => SocketStore.getChatMsgList, val => {
   chatData.msgList = list
 },{ deep: true, immediate: true })
 
+const scrollToBottom = () => {
+  chatBoxRef.value.scrollTop = chatBoxRef.value.scrollHeight
+}
+
+watch(() => chatData.msgList, () => {
+  scrollToBottom()
+},{ deep: true })
+
+onMounted(()=>{
+  scrollToBottom()
+})
+
 const submit = () => {
   sendMessage({ to: targetId, from: currentUserId, content: content.value })
+  content.value = ''
+}
+
+const router = useRouter()
+const back = () => {
+  router.go(-1)
 }
 
 </script>
 
 <style lang="less" scoped>
+.navigation-bar-contianer {
+  height: 8vh;
+  line-height: 8vh;
+  position: relative;
+
+  .icon-back {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .title {
+    text-align: center;
+    font-size: 50px;
+  }
+}
+
 .chat-content-container {
-  height: 80vh;
+  height: 72vh;
   font-size: 30px;
-  border: 1px solid #eee;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
   box-sizing: border-box;
   overflow: auto;
+
+  .chat-content {
+    div {
+      max-width: 550px;
+      word-break: break-all;
+      text-align: right;
+    }
+  }
 }
 
 .chat-tool-container {
   height: 20vh;
   font-size: 30px;
-  border: 1px solid #eee;
   box-sizing: border-box;
 
   .input-container {
